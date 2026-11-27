@@ -1,0 +1,1 @@
+官网前台基于项目中星桥 API 交付版的 deploy/site。保留该次 Sub2API 版本 0.1.170 随附的 LGPL-3.0 许可证；不将上游服务、身份、支付、订阅或计费系统作为本仓库原创。上游：https://github.com/Wei-Shaw/sub2api/tree/7e2e9ba05026b7126318aa0754c1afa0ac00bc58 。默认域名均为示例，控制台仅为演示。

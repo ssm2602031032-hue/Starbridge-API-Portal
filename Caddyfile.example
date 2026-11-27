@@ -1,0 +1,10 @@
+api.example.invalid {
+  @site path / /index.html /preview.html /docs.html /terms.html /privacy.html /site-assets/*
+  handle @site {
+    root * /srv/starbridge
+    file_server
+  }
+  handle {
+    reverse_proxy 127.0.0.1:8080
+  }
+}

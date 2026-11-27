@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="一个入口查看模型接入与调用说明" />
+    <meta name="theme-color" content="#111827" />
+    <link rel="icon" type="image/svg+xml" href="/site-assets/logo.svg" />
+    <link rel="stylesheet" href="/site-assets/site.css" />
+    <script src="/site-assets/site.js" defer></script>
+    <title>星桥 API - 模型 API 接入平台</title>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="shell">
+        <a class="brand" href="/" aria-label="返回首页">
+          <img src="/site-assets/logo.svg" alt="" width="38" height="38" />
+          <span>星桥 API</span>
+        </a>
+        <button class="menu-toggle" type="button" data-menu-toggle aria-expanded="false" aria-controls="main-nav">菜单</button>
+        <nav class="main-nav" id="main-nav" data-menu data-open="false" aria-label="主导航">
+          <a href="#console">控制台</a>
+          <a href="/preview.html">模型广场</a>
+          <a href="/docs.html">接入文档</a>
+          <a class="nav-command" href="/preview.html">登录</a>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero" aria-labelledby="hero-title">
+        <div class="shell">
+          <p class="eyebrow">AI API Gateway</p>
+          <h1 id="hero-title">星桥 API</h1>
+          <p class="hero-copy">一个入口查看模型接入与调用说明。统一密钥、额度、计费与调用记录，让每一次请求都可追踪。</p>
+          <div class="hero-actions">
+            <a class="button button-primary" href="/preview.html">进入控制台</a>
+            <a class="button button-secondary" href="/docs.html">查看接入文档</a>
+          </div>
+        </div>
+      </section>
+
+      <section class="protocol-strip" aria-label="协议能力">
+        <div class="shell">
+          <div class="protocol-item"><strong>OpenAI Compatible</strong><span>/v1/chat/completions</span></div>
+          <div class="protocol-item"><strong>Anthropic Compatible</strong><span>/v1/messages</span></div>
+          <div class="protocol-item"><strong>Token Billing</strong><span>实时用量与余额</span></div>
+          <div class="protocol-item"><strong>Policy Controls</strong><span>并发、RPM 与 TPM</span></div>
+        </div>
+      </section>
+
+      <section class="section section-soft" id="console">
+        <div class="shell">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">Console</p>
+              <h2>一套控制台，覆盖分发与运营</h2>
+            </div>
+            <p>用户侧管理 API Key、额度、订阅与调用记录；管理侧维护上游账号、模型分组、定价、支付、风控和运行状态。</p>
+          </div>
+          <div class="console-frame">
+            <img src="/site-assets/console-preview.png" alt="星桥 API 控制台预览，显示余额、请求量、Token 用量和模型分布" width="1440" height="900" />
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="shell">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">Operations</p>
+              <h2>从请求入口到结算记录</h2>
+            </div>
+            <p>上游接入后，账号、模型、费率与限额均在后台维护。前端页面和 API 兼容层无需重新开发。</p>
+          </div>
+          <div class="capability-grid">
+            <article class="capability"><span class="capability-index">01</span><h3>密钥分发</h3><p>独立 API Key、分组权限、有效期与启停状态。</p></article>
+            <article class="capability"><span class="capability-index">02</span><h3>精确计费</h3><p>按模型、Token、倍率和高峰策略记录费用。</p></article>
+            <article class="capability"><span class="capability-index">03</span><h3>容量控制</h3><p>用户与上游账号的并发、RPM、TPM 和预算限制。</p></article>
+            <article class="capability"><span class="capability-index">04</span><h3>运行审计</h3><p>请求日志、错误分布、账号切换和管理操作留痕。</p></article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section section-dark">
+        <div class="shell api-band">
+          <div>
+            <p class="eyebrow">One Base URL</p>
+            <h2>客户端只需替换地址和密钥</h2>
+            <p>上游模型与定价以控制台实际发布内容为准，接入方式保持稳定。</p>
+          </div>
+          <div class="code-panel">
+            <div class="code-panel-header">
+              <span>OpenAI-compatible request</span>
+              <button class="copy-button" type="button" data-copy-target="home-code" aria-label="复制代码" title="复制代码">&#x2398;</button>
+            </div>
+            <pre id="home-code"><code>curl https://api.example.invalid/v1/chat/completions \
+  -H "Authorization: Bearer ${MODEL_API_KEY}" \
+  -H "Content-Type: application/json" \
+  -d '{"model":"MODEL_ID","messages":[{"role":"user","content":"Hello"}]}'</code></pre>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="shell final-cta">
+          <div>
+            <h2>控制台已就绪</h2>
+            <p>上游资源完成录入后，即可创建分组、发放密钥并开始计费。</p>
+          </div>
+          <a class="button button-primary" href="/preview.html">登录管理后台</a>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="shell">
+        <span>&copy; 2026 星桥 API</span>
+        <nav class="footer-links" aria-label="页脚导航">
+          <a href="/docs.html">文档</a>
+          <a href="/terms.html">服务条款</a>
+          <a href="/privacy.html">隐私政策</a>
+          <a href="mailto:support@example.invalid">联系支持</a>
+        </nav>
+      </div>
+    </footer>
+  </body>
+</html>

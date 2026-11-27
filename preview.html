@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Console Preview</title>
+    <style>
+      * { box-sizing: border-box; letter-spacing: 0; }
+      html, body { margin: 0; width: 1440px; height: 900px; overflow: hidden; background: #eef2f6; color: #172033; font-family: Inter, "Segoe UI", "Microsoft YaHei", sans-serif; }
+      .app { display: grid; grid-template-columns: 232px 1fr; width: 1440px; height: 900px; }
+      .sidebar { background: #111827; color: #cbd5e1; padding: 24px 16px; }
+      .brand { display: flex; align-items: center; gap: 11px; padding: 0 8px 26px; color: #fff; font-size: 18px; font-weight: 750; }
+      .brand img { width: 38px; height: 38px; border-radius: 6px; }
+      .nav-label { padding: 20px 12px 8px; color: #64748b; font-size: 10px; font-weight: 750; text-transform: uppercase; }
+      .nav-item { display: flex; height: 42px; align-items: center; gap: 11px; margin: 3px 0; border-radius: 6px; padding: 0 12px; font-size: 13px; }
+      .nav-item.active { background: #1f2937; color: #fff; }
+      .nav-icon { width: 9px; height: 9px; border: 2px solid #64748b; border-radius: 2px; }
+      .nav-item.active .nav-icon { border-color: #38bdf8; background: #38bdf8; }
+      .main { min-width: 0; }
+      .topbar { display: flex; height: 70px; align-items: center; justify-content: space-between; border-bottom: 1px solid #d7dee7; background: #fff; padding: 0 30px; }
+      .topbar strong { font-size: 17px; }
+      .topbar-right { display: flex; align-items: center; gap: 16px; color: #64748b; font-size: 12px; }
+      .status-dot { width: 8px; height: 8px; border-radius: 50%; background: #22c55e; }
+      .avatar { display: grid; width: 34px; height: 34px; place-items: center; border-radius: 50%; background: #e2e8f0; color: #334155; font-weight: 700; }
+      .content { padding: 28px 30px; }
+      .page-head { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 22px; }
+      .page-head h1 { margin: 0; font-size: 25px; }
+      .page-head p { margin: 5px 0 0; color: #64748b; font-size: 13px; }
+      .range { display: flex; overflow: hidden; border: 1px solid #cbd5e1; border-radius: 6px; background: #fff; }
+      .range span { padding: 7px 12px; border-right: 1px solid #cbd5e1; color: #64748b; font-size: 11px; }
+      .range span:last-child { border: 0; }
+      .range .selected { background: #172033; color: #fff; }
+      .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+      .stat { min-height: 118px; border: 1px solid #d7dee7; border-radius: 6px; background: #fff; padding: 18px; }
+      .stat-label { color: #64748b; font-size: 12px; }
+      .stat-value { margin-top: 14px; font-size: 28px; font-weight: 750; }
+      .stat-trend { margin-top: 4px; color: #15803d; font-size: 11px; }
+      .dashboard { display: grid; grid-template-columns: minmax(0, 1.55fr) minmax(320px, .85fr); gap: 14px; margin-top: 14px; }
+      .panel { border: 1px solid #d7dee7; border-radius: 6px; background: #fff; }
+      .panel-head { display: flex; height: 54px; align-items: center; justify-content: space-between; border-bottom: 1px solid #e5e7eb; padding: 0 18px; }
+      .panel-head strong { font-size: 13px; }
+      .panel-head span { color: #94a3b8; font-size: 11px; }
+      .chart { position: relative; height: 270px; padding: 26px 18px 22px 54px; }
+      .chart-grid { position: absolute; inset: 24px 18px 32px 52px; display: grid; grid-template-rows: repeat(4, 1fr); }
+      .chart-grid i { border-top: 1px solid #e5e7eb; }
+      .chart svg { position: absolute; inset: 28px 18px 35px 52px; width: calc(100% - 70px); height: calc(100% - 63px); }
+      .x-axis { position: absolute; right: 18px; bottom: 10px; left: 52px; display: flex; justify-content: space-between; color: #94a3b8; font-size: 9px; }
+      .model-list { padding: 10px 18px 18px; }
+      .model-row { display: grid; grid-template-columns: 1fr 78px 46px; align-items: center; gap: 10px; min-height: 48px; border-bottom: 1px solid #eef2f6; font-size: 11px; }
+      .model-row:last-child { border: 0; }
+      .model-name { display: flex; align-items: center; gap: 9px; font-weight: 650; }
+      .model-badge { width: 28px; height: 28px; border-radius: 5px; background: #e0f2fe; color: #0369a1; display: grid; place-items: center; font-size: 9px; }
+      .meter { height: 5px; overflow: hidden; border-radius: 3px; background: #e5e7eb; }
+      .meter span { display: block; height: 100%; background: #38bdf8; }
+      .requests { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 14px; }
+      .request-table { padding: 4px 18px 12px; }
+      .request-row { display: grid; grid-template-columns: 76px 1fr 76px 62px; min-height: 42px; align-items: center; border-bottom: 1px solid #eef2f6; color: #475569; font-size: 10px; }
+      .request-row.header { color: #94a3b8; font-weight: 700; }
+      .ok { color: #15803d; font-weight: 700; }
+      .summary { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: #e5e7eb; }
+      .summary div { min-height: 82px; background: #fff; padding: 18px; }
+      .summary strong { display: block; margin-top: 6px; font-size: 20px; }
+      .summary span { color: #64748b; font-size: 10px; }
+    </style>
+  </head>
+  <body>
+    <div class="app">
+      <aside class="sidebar">
+        <div class="brand"><img src="site-assets/logo.svg" alt="" /><span>星桥 API</span></div>
+        <div class="nav-item active"><i class="nav-icon"></i>仪表盘</div>
+        <div class="nav-label">分发</div>
+        <div class="nav-item"><i class="nav-icon"></i>API 密钥</div>
+        <div class="nav-item"><i class="nav-icon"></i>用户管理</div>
+        <div class="nav-item"><i class="nav-icon"></i>分组管理</div>
+        <div class="nav-label">上游</div>
+        <div class="nav-item"><i class="nav-icon"></i>账号管理</div>
+        <div class="nav-item"><i class="nav-icon"></i>渠道状态</div>
+        <div class="nav-item"><i class="nav-icon"></i>运维监控</div>
+        <div class="nav-label">财务</div>
+        <div class="nav-item"><i class="nav-icon"></i>订阅套餐</div>
+        <div class="nav-item"><i class="nav-icon"></i>支付概览</div>
+        <div class="nav-item"><i class="nav-icon"></i>操作日志</div>
+      </aside>
+      <main class="main">
+        <header class="topbar"><strong>运营仪表盘</strong><div class="topbar-right"><span class="status-dot"></span><span>系统运行正常</span><span class="avatar">A</span></div></header>
+        <div class="content">
+          <div class="page-head"><div><h1>运行概览</h1><p>演示数据 · 上游接入后显示实际调用结果</p></div><div class="range"><span>24 小时</span><span class="selected">7 天</span><span>30 天</span></div></div>
+          <section class="stats">
+            <div class="stat"><div class="stat-label">请求量</div><div class="stat-value">48,920</div><div class="stat-trend">+12.4% 较上周期</div></div>
+            <div class="stat"><div class="stat-label">Token 用量</div><div class="stat-value">18.7M</div><div class="stat-trend">+8.1% 较上周期</div></div>
+            <div class="stat"><div class="stat-label">成功率</div><div class="stat-value">99.82%</div><div class="stat-trend">稳定</div></div>
+            <div class="stat"><div class="stat-label">活跃密钥</div><div class="stat-value">286</div><div class="stat-trend">+19 本周期</div></div>
+          </section>
+          <section class="dashboard">
+            <div class="panel"><div class="panel-head"><strong>请求与 Token 趋势</strong><span>按小时聚合</span></div><div class="chart"><div class="chart-grid"><i></i><i></i><i></i><i></i></div><svg viewBox="0 0 700 200" preserveAspectRatio="none"><polyline points="0,168 50,158 100,165 150,126 200,134 250,90 300,102 350,74 400,88 450,48 500,61 550,34 600,45 650,20 700,31" fill="none" stroke="#0284c7" stroke-width="4"/><polyline points="0,184 50,177 100,179 150,160 200,168 250,142 300,149 350,126 400,134 450,105 500,114 550,91 600,99 650,70 700,79" fill="none" stroke="#22c55e" stroke-width="3"/></svg><div class="x-axis"><span>08-01</span><span>08-02</span><span>08-03</span><span>08-04</span><span>08-05</span><span>08-06</span><span>08-07</span></div></div></div>
+            <div class="panel"><div class="panel-head"><strong>模型分布</strong><span>演示</span></div><div class="model-list"><div class="model-row"><div class="model-name"><i class="model-badge">M1</i>Model Alpha</div><div class="meter"><span style="width:82%"></span></div><span>42%</span></div><div class="model-row"><div class="model-name"><i class="model-badge">M2</i>Model Beta</div><div class="meter"><span style="width:61%"></span></div><span>31%</span></div><div class="model-row"><div class="model-name"><i class="model-badge">M3</i>Model Gamma</div><div class="meter"><span style="width:36%"></span></div><span>18%</span></div><div class="model-row"><div class="model-name"><i class="model-badge">OTH</i>其他</div><div class="meter"><span style="width:18%"></span></div><span>9%</span></div></div></div>
+          </section>
+          <section class="requests">
+            <div class="panel"><div class="panel-head"><strong>近期请求</strong><span>实时</span></div><div class="request-table"><div class="request-row header"><span>时间</span><span>模型</span><span>Token</span><span>状态</span></div><div class="request-row"><span>14:32:08</span><span>Model Alpha</span><span>8,420</span><span class="ok">200</span></div><div class="request-row"><span>14:31:54</span><span>Model Beta</span><span>3,106</span><span class="ok">200</span></div><div class="request-row"><span>14:31:29</span><span>Model Alpha</span><span>12,884</span><span class="ok">200</span></div></div></div>
+            <div class="panel"><div class="panel-head"><strong>容量与费用</strong><span>演示</span></div><div class="summary"><div><span>平均首字延迟</span><strong>612 ms</strong></div><div><span>当前并发</span><strong>36 / 120</strong></div><div><span>今日计费</span><strong>$ 184.62</strong></div><div><span>错误率</span><strong>0.18%</strong></div></div></div>
+          </section>
+        </div>
+      </main>
+    </div>
+  </body>
+</html>
